@@ -5,13 +5,6 @@ import os
 
 from sentence_transformers import SentenceTransformer
 
-import faiss
-import numpy as np
-import os
-import pickle
-
-from sentence_transformers import SentenceTransformer
-
 
 class Embedder:
     """Encodes text into embeddings and allows efficient similarity search."""

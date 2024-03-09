@@ -1,8 +1,9 @@
 from data_processing import DataProcessor
 from embedder import Embedder
+from embedder_openai import EmbedderOpenAI
 
 import faiss  # Import Faiss if necessary
-
+api_key =  ""
 class RAG:
     """Represents a Retrieval-Augmented Generation (RAG) model."""
 
@@ -44,7 +45,8 @@ class RAG:
 
     def _create_rag_block(self):
         """Creates the embedding index and encoder for the RAG model."""
-        self.encoder = Embedder("thenlper/gte-large", self._chunks, index_name=f"./data/{self.name}")
+        #self.encoder = Embedder("thenlper/gte-large", self._chunks, index_name=f"./data/{self.name}")
+        self.encoder = EmbedderOpenAI("text-embedding-ada-002", self._chunks, f"./data/{self.name}", api_key)
 
     def similarity_search(self, query, n_results=5, return_indexes=False):
         """Performs a similarity search and filters results.
@@ -58,7 +60,8 @@ class RAG:
             A tuple of filtered distances and results.
         """
         distances, results = self.encoder.similarity_search(query, n_results, return_indexes)
-
+        print("dist",distances)
+        print("results", results)
         keep_mask = distances < self.similarity_threshold
         filtered_distances = distances[keep_mask]
         filtered_results = results[keep_mask]

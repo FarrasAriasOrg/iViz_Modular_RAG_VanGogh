@@ -7,7 +7,7 @@ from colorama import init, Fore
 init()
 
 model_endpoint = "https://api.openai.com/v1/chat/completions"
-api_key =  "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"
+api_key =  "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"
 if api_key == "":
     print(Fore.RED + "Your api key is empty, if you're not getting responses, make sure to explicitly write it in ragbot_example.py" + Fore.RESET)
 

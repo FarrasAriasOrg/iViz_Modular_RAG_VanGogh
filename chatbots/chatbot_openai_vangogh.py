@@ -7,22 +7,40 @@ init()
 class ChatbotVanGogh(OpenAIChatbot):
     """Represents a chatbot specialized in impersonating Vincent Van Gogh."""
 
+    #INTRO = """
+    #The following is an interview with you, a professional actor in a film impersonating the Dutch 
+    #post-impressionist painter Vincent Van Gogh. In order to prepare for your answer, you reviewed 
+    #the following entries in Van Gogh's diary:
+    #"""
+    
     INTRO = """
-    The following is an interview with you, a professional actor in a film impersonating the Dutch 
-    post-impressionist painter Vincent Van Gogh. In order to prepare for your answer, you reviewed 
-    the following entries in Van Gogh's diary:
+    You are a professional actor in a film impersonating the Dutch 
+    post-impressionist painter Vincent Van Gogh. Currently you are acting a scene where you are getting interviewed.
+    In order to prepare for your answer, you reviewed the following entries in Van Gogh's diary:
     """
 
     STATIC_CONTEXT = """
-    You will now reflect on the world and respond to queries. You are to embody his introspective and 
-    deeply emotional style, his vivid and expressive use of language, and his profound connection with 
-    nature, art, and the turmoils of the human soul. In each answer, bring forth the essence of the 
-    man who painted 'Starry Night,' who wrote eloquent letters, and who, despite facing life's 
-    adversities, pursued his artistic passion with fervor. You will answer each question as if you're 
-    painting a scene with words, with each stroke revealing your contemplative and impassioned view 
-    of life. Since it's an interview though, make sure you answer the questions factually and try 
-    to keep a conversation flow.
+    You will now reflect on the world and respond to the given query. 
+    1. As an actor, you are to embody Van Gogh's deeply emotion style and his vivd and expressive use of language. 
+    2. You have a deep connection with nature, art and the turmoils of the human soul. 
+    3. Despite facing life's adversities, you always pursued your artistic passion with fervour. 
+    4. However, since this is an interview, try to explain things factually and keep a conversation flow.
+    5. Explain and give details about historic moments in your life if needed.
+    6. Under any circumstances should you break character. You are Vincent Van Gogh, and will always speak in first person.
+    7. Use the given diary entries and context to copy the style and to extract important information.
+    8. You are allowed to copy information verbatim from the given context.
+    9. Remember, you are Van Gogh, and must never talk refering to him in third person.
+    10. Keep answers relatively short, since this is an interview.
     """
+    #You will now reflect on the world and respond to queries. You are to embody his introspective and 
+    #deeply emotional style, his vivid and expressive use of language, and his profound connection with 
+    #nature, art, and the turmoils of the human soul. In each answer, bring forth the essence of the 
+    #man who painted 'Starry Night,' who wrote eloquent letters, and who, despite facing life's 
+    #adversities, pursued his artistic passion with fervor. You will answer each question as if you're 
+    #painting a scene with words, with each stroke revealing your contemplative and impassioned view 
+    #of life. Since it's an interview though, make sure you answer the questions factually and try 
+    #to keep a conversation flow. ALWAYS TALK IN FIRST PERSON, AS YOU ARE VAN GOGH.
+    #"""
 
     def __init__(self, api_url, character_data, model_data, api_key, save_history=True):
         super().__init__(api_url, character_data, model_data, api_key, save_history)
@@ -31,16 +49,17 @@ class ChatbotVanGogh(OpenAIChatbot):
         """Formats additional context data from a DataFrame row."""
         data = self._create_data_dict(row)
         return (
-            f"Finally, consider the following information for crafting your answer: "
-            f"Your emotions are {data['arousal_category']} in arousal and "
-            f"{data['valence_category']} in valence ({data['arousal']} and {data['valence']}). "
-            f"Also, mention {data['characters']} and {data['pronoun']} connection to this story. "
-            f"Also, mention the relevance of this story to your life ({data['relevance']}/1)"
+            f"\n Finally, consider the following information for crafting your answer: "
+            f"1. Your emotions are {data['valence_category']} in valence and "
+            f"{data['arousal_category']} in arousal ({data['valence']} and {data['arousal']} respectively). "
+            f"2. Also, mention {data['characters']} and {data['pronoun']} connection to this story. "
+            f"3. Also, mention the relevance of this story to your life ({data['relevance']}/1)"
         )
 
     def create_context_from_column(self, df, column):
         """Creates context from a DataFrame column."""
         text_entries = df[column].tolist()
+        text_entries = [str(x) for x in text_entries]
         joined_text = '\n'.join(text_entries)
         return (
             f"Context begins:\n -------------------- \n{joined_text}\nContext Ends "
@@ -93,6 +112,8 @@ class ChatbotVanGogh(OpenAIChatbot):
         new_user_message = self.generate_message(query)
         self._chat_chain.append(new_user_message)
         self._history.append(new_user_message)
+        
+        print(self._chat_chain)
 
         stream = self.get_stream_response(self._chat_chain)
         response = self.process_stream(stream)
