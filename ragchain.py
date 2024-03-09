@@ -46,12 +46,13 @@ class RAGChain:
                              key=lambda rag: (rag.order != 99, rag.order == 0, -rag.order))
 
         rag_texts = [self._init_prompt]
-        search_results = []  # Collect results from each RAG
+        #search_results = []  # Collect results from each RAG
+        #search_results = None
 
         for rag in sorted_rags:
-            result, text = rag.similarity_search(query)
-            search_results.append(text) 
-            text = self.format_responses(text, rag)
+            result, search_results = rag.similarity_search(query)
+            #search_results.append(text) 
+            text = self.format_responses(search_results, rag)
             rag_texts.append("---------------")
             rag_texts.append(text)
 

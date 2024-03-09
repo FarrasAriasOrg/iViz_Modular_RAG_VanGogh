@@ -17,6 +17,7 @@ venv/
 # Ignore the whole data folder...
 data/einstein_index
 data/vginterview_index
+data/van_gogh_bio_index
 
 # Except the test files... 
 !/data/a3.txt
