@@ -1,6 +1,7 @@
 # iViz Modular RAG
 
 **IMPORTANT: Modifications**
+
 This version of the code corresponds to the CHI position paper: LINK
 This repo was forked from https://github.com/FarrasArias/iViz_Modular_RAG. It contains a subclass extension to the OpenAIChatbot class, which was adapted for the paper. Likewise, it adds the ragbot_vangogh.py script to handle the specific changes for the paper.
 
