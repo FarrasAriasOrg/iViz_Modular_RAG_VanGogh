@@ -18,6 +18,7 @@ venv/
 data/einstein_index
 data/vginterview_index
 data/van_gogh_bio_index
+data/van_gogh_bio_openai_index
 
 # Except the test files... 
 !/data/a3.txt
